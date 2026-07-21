@@ -15,24 +15,72 @@ Classes are ordered ['at-risk','unhealthy','fit'] to match the local pipeline.
 import os, sys, json, time, subprocess, warnings
 warnings.filterwarnings("ignore")
 
-# --- install tabpfn (internet must be enabled on the kernel) ---
+# --- 1. Ensure torch has kernels for the assigned GPU BEFORE importing torch ---
+# Kaggle's torch (2.10+cu128) dropped Pascal (sm_60) kernels, but it assigns P100 GPUs.
+# Probe in a subprocess (so the main process's torch import stays unlocked), and if the
+# GPU arch isn't supported, pin torch 2.5.1+cu121 (has sm_60 and satisfies tabpfn>=2.5).
+_probe = subprocess.run(
+    [sys.executable, "-c",
+     "import torch;"
+     "cap=torch.cuda.get_device_capability(0) if torch.cuda.is_available() else (0,0);"
+     "print('OK' if f'sm_{cap[0]}{cap[1]}' in torch.cuda.get_arch_list() else 'PIN')"],
+    capture_output=True, text=True)
+if "PIN" in _probe.stdout:
+    print("GPU arch unsupported by current torch -> pinning torch 2.5.1+cu121", flush=True)
+    subprocess.run([sys.executable, "-m", "pip", "install", "-q",
+                    "torch==2.5.1", "--index-url", "https://download.pytorch.org/whl/cu121"], check=False)
+
+# --- 2. install tabpfn WITHOUT letting pip replace the (now-pinned) torch ---
 try:
     import tabpfn  # noqa
 except Exception:
-    subprocess.run([sys.executable, "-m", "pip", "install", "-q", "tabpfn"], check=False)
+    subprocess.run([sys.executable, "-m", "pip", "install", "-q", "--no-deps", "tabpfn"], check=False)
+    subprocess.run([sys.executable, "-m", "pip", "install", "-q",
+                    "safetensors>=0.4.0", "einops>=0.4.0", "pydantic>=2.8.0",
+                    "pydantic-settings>=2.10.1", "huggingface-hub>=0.23.0"], check=False)
 
+import glob
 import numpy as np, pandas as pd
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import balanced_accuracy_score
 import torch
 
-DATA = "/kaggle/input/playground-series-s6e7"
+
+def find_data_dir():
+    root = "/kaggle/input"
+    print("::/kaggle/input contents::", os.listdir(root) if os.path.isdir(root) else "MISSING", flush=True)
+    hits = glob.glob(f"{root}/**/train.csv", recursive=True)
+    print("::train.csv candidates::", hits, flush=True)
+    if hits:
+        return os.path.dirname(hits[0])
+    raise FileNotFoundError("competition data not mounted under /kaggle/input")
+
+
+def cuda_report():
+    print("torch", torch.__version__, "| cuda", torch.version.cuda,
+          "| avail", torch.cuda.is_available(), flush=True)
+    if torch.cuda.is_available():
+        try:
+            print("gpu", torch.cuda.get_device_name(0),
+                  "| capability", torch.cuda.get_device_capability(0),
+                  "| arch_list", torch.cuda.get_arch_list(), flush=True)
+            _ = (torch.randn(64, 64, device="cuda") @ torch.randn(64, 64, device="cuda")).sum().item()
+            print("CUDA self-test: OK", flush=True)
+            return True
+        except Exception as e:
+            print("CUDA self-test FAILED:", str(e)[:160], flush=True)
+            return False
+    return False
+
+
+CUDA_OK = cuda_report()
+DATA = find_data_dir()
 OUT = "/kaggle/working"
 CLASSES = ["at-risk", "unhealthy", "fit"]
 C2I = {c: i for i, c in enumerate(CLASSES)}
 SEED = 42
-N_ENS = int(os.environ.get("N_ENS", "8"))          # subsample models per fit
-CTX = int(os.environ.get("CTX", "10000"))          # rows per subsample (balanced)
+N_ENS = int(os.environ.get("N_ENS", "6"))          # subsample models per fit
+CTX = int(os.environ.get("CTX", "8000"))           # rows per subsample (balanced)
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 NUM = ["sleep_duration", "heart_rate", "bmi", "calorie_expenditure", "step_count", "exercise_duration", "water_intake"]
@@ -56,10 +104,15 @@ def prep(df):
     return X.astype("float32")
 
 
+# Force the UNGATED v2 classifier (v3/v2.5/v2.6 require a license; v2 does not).
+V2_CKPT = os.environ.get("TABPFN_V2_CKPT", "tabpfn-v2-classifier-finetuned-zk73skhh.ckpt")
+
+
 def make_clf():
     from tabpfn import TabPFNClassifier
-    for kw in (dict(device=DEVICE, ignore_pretraining_limits=True),
-               dict(device=DEVICE), dict()):
+    for kw in (dict(model_path=V2_CKPT, device=DEVICE, ignore_pretraining_limits=True),
+               dict(model_path=V2_CKPT, device=DEVICE),
+               dict(device=DEVICE, ignore_pretraining_limits=True)):
         try:
             return TabPFNClassifier(**kw)
         except TypeError:
