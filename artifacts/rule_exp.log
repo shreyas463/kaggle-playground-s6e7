@@ -1,0 +1,8 @@
+[B_rule] raw=0.94979 tuned=0.94984
+[C_orig] raw=0.94917 tuned=0.94937
+[D_rule_orig] raw=0.94936 tuned=0.94955
+
+Reference A_lean = 0.94966
+  B_rule       0.94984  (+0.00018)
+  C_orig       0.94937  (-0.00029)
+  D_rule_orig  0.94955  (-0.00011)

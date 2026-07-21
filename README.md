@@ -44,14 +44,42 @@ indicators added nothing (+0.00002). The remaining gap to the leaderboard top (~
 yet captured — the likely levers are **feature discovery or the original source dataset**, not more
 algorithms or ensembling.
 
-**Best submission so far:** single balanced LightGBM — public LB **0.94960**.
+## The original dataset, found and cracked
 
-### Next steps to close the gap
-- Recover / identify the real source dataset behind the synthetic data (often the biggest lever in
-  Playground competitions) and use it as extra training signal.
-- Targeted feature discovery around the exact decision boundaries (sleep/stress/activity thresholds).
-- Per-fold threshold optimization and calibrated stacking with a diverse base (e.g. RandomForest,
-  which was competitive here) rather than correlated GBMs.
+The synthetic source is [`ziya07/college-student-health-behavior-dataset`](https://www.kaggle.com/datasets/ziya07/college-student-health-behavior-dataset)
+(identified in [discussion #717222](https://www.kaggle.com/competitions/playground-series-s6e7/discussion/717222)).
+Its target is **fully deterministic** — a depth-4 decision tree over 3 features (verified: accuracy
+1.0 on the original 50k):
+
+```
+sleep < 6h:  stress == high → unhealthy;  else → at-risk
+sleep ≥ 6h:  stress == low ∧ activity == active ∧ sleep ≥ 7h → fit;  else → at-risk
+```
+
+The competition data is this rule + feature noise + injected missingness — which explains the
+~0.950 plateau: past the Bayes frontier there is nothing left to learn.
+
+**Experiments (full data, 5-fold, tuned decision rule; reference lean LGBM = 0.94966 OOF):**
+
+| Config | OOF | Δ | LB |
+|---|---|---|---|
+| + rule-threshold features (sleep<6/<7, stress, activity flags, rule label) | **0.94984** | **+0.00018** | **0.94965** ← best |
+| + original 50k as extra train rows | 0.94937 | −0.00029 | — |
+| + both | 0.94955 | −0.00011 | — |
+| stack (LGBM+XGB+HistGB+rule) via logistic meta-model | 0.94986 | +0.00002 vs rule | — |
+
+Lessons: giving the model the *exact* generation thresholds helps; training on the noise-free
+original **hurts** (it pulls the model toward the deterministic rule, which is wrong for noisy rows
+near thresholds — the original's value was revealing the rule, not its rows); stacking correlated
+GBMs adds ~nothing.
+
+### Context on the leaderboard (from the top scorer's own writeup)
+The public 0.952+ scores come from **public-LB probing** — the public split is deterministic, so
+row-level membership can be recovered by group testing. That transfers zero to the private 80%.
+The honest CV ceiling is **~0.9508**; an honest ~0.950+ model may rank well on private when the
+probed scores collapse. Remaining honest headroom (~+0.001) likely requires an orthogonal model
+family (e.g. a tabular foundation model like TabPFN) blended with the GBMs — correlated GBM
+ensembles are exhausted.
 
 ## Layout
 ```
