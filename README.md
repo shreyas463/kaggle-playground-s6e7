@@ -39,9 +39,19 @@ models lag badly because the target is driven by **interactions** (fit = low str
 
 On the **full 690k** data the boosted models all land at **~0.9495–0.9496 OOF**, which matches the
 public LB almost exactly (OOF 0.9496 → LB 0.9496 — tight CV↔LB). A greedy blend of LGBM+XGB+HistGB
-nudged OOF to 0.94987 but did not improve the LB (the models are too correlated). The remaining gap
-to the leaderboard top (~0.953) is signal not yet captured — likely better features or the original
-source dataset, not more algorithms.
+nudged OOF to 0.94987 but did not improve the LB (the models are too correlated), and missingness
+indicators added nothing (+0.00002). The remaining gap to the leaderboard top (~0.953) is signal not
+yet captured — the likely levers are **feature discovery or the original source dataset**, not more
+algorithms or ensembling.
+
+**Best submission so far:** single balanced LightGBM — public LB **0.94960**.
+
+### Next steps to close the gap
+- Recover / identify the real source dataset behind the synthetic data (often the biggest lever in
+  Playground competitions) and use it as extra training signal.
+- Targeted feature discovery around the exact decision boundaries (sleep/stress/activity thresholds).
+- Per-fold threshold optimization and calibrated stacking with a diverse base (e.g. RandomForest,
+  which was competitive here) rather than correlated GBMs.
 
 ## Layout
 ```

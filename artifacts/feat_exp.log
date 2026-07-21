@@ -1,0 +1,4 @@
+[lean] OOF balanced acc: raw=0.94950 tuned=0.94966
+[lean_missing] OOF balanced acc: raw=0.94943 tuned=0.94968
+
+lean=0.94966  lean+missing=0.94968  delta=+0.00002
