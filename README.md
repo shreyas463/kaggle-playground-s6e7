@@ -20,12 +20,38 @@ Solution for [Playground Series S6E7](https://www.kaggle.com/competitions/playgr
   optimal — per-class probability multipliers are tuned on OOF to maximize balanced accuracy, then
   applied to the averaged test-fold probabilities.
 
+## Algorithm comparison
+Balanced accuracy, 5-fold, on a 200k stratified subsample (relative ranking):
+
+| Algorithm | Balanced accuracy |
+|---|---|
+| HistGradientBoosting | **0.9482** |
+| RandomForest | 0.9480 |
+| XGBoost | 0.9465 |
+| LightGBM | 0.9452 |
+| ExtraTrees | 0.9377 |
+| LogisticRegression | 0.9188 |
+| KNN | 0.8993 |
+
+Gradient-boosted trees win; RandomForest is a strong close second. Linear and distance-based
+models lag badly because the target is driven by **interactions** (fit = low stress *and* active
+*and* good sleep; unhealthy = high stress *and* short sleep) that they can't represent.
+
+On the **full 690k** data the boosted models all land at **~0.9495–0.9496 OOF**, which matches the
+public LB almost exactly (OOF 0.9496 → LB 0.9496 — tight CV↔LB). A greedy blend of LGBM+XGB+HistGB
+nudged OOF to 0.94987 but did not improve the LB (the models are too correlated). The remaining gap
+to the leaderboard top (~0.953) is signal not yet captured — likely better features or the original
+source dataset, not more algorithms.
+
 ## Layout
 ```
-src/train.py        # end-to-end: load -> CV -> tune decision rule -> submission
-src/eda.py          # data exploration
-data/               # competition CSVs (gitignored)
-submissions/        # generated submissions (gitignored)
+src/features.py           # feature engineering + design matrices per model family
+src/train.py              # single LightGBM end-to-end -> submission
+src/train_models.py       # full-data multi-model OOF (LGBM/XGB/CatBoost/HistGB/RF/ET/LogReg/KNN)
+src/compare_algos.py      # fast apples-to-apples algorithm comparison (subsample)
+src/ensemble.py           # greedy blend + balanced-accuracy decision-rule tuning
+src/experiment_features.py# feature ablations (e.g. missingness indicators)
+data/  submissions/  artifacts/   # gitignored
 ```
 
 ## Run

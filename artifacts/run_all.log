@@ -1,0 +1,4 @@
+>>> lgbm         OOF balanced_acc = 0.94951
+    (lgbm took 1672s)
+>>> xgb          OOF balanced_acc = 0.94947
+    (xgb took 1474s)

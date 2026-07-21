@@ -1,0 +1,18 @@
+Comparison on stratified subsample of 199,998 rows, 5-fold, balanced accuracy:
+
+  LightGBM                   0.94517   (34s)
+  XGBoost                    0.94652   (39s)
+  HistGradientBoosting       0.94817   (22s)
+  RandomForest               0.94803   (41s)
+  ExtraTrees                 0.93767   (33s)
+  LogisticRegression         0.91876   (9s)
+  KNN                        0.89932   (112s)
+
+=== ranking ===
+  HistGradientBoosting       0.94817
+  RandomForest               0.94803
+  XGBoost                    0.94652
+  LightGBM                   0.94517
+  ExtraTrees                 0.93767
+  LogisticRegression         0.91876
+  KNN                        0.89932
