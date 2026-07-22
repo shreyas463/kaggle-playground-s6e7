@@ -95,6 +95,29 @@ Getting TabPFN running on the kernel meant clearing three real blockers, documen
 is the *gated* v3 model (force ungated v2 via `model_path`); and Kaggle's torch 2.10+cu128 dropped
 Pascal (sm_60) kernels while assigning a P100 — pin torch 2.5.1+cu121 before import.
 
+## Grinding the ceiling — why 0.95 is hard *honestly*
+
+Traced exactly where the ~6% error lives, then attacked it:
+
+- **87% of errors are rows missing ≥1 of the 3 driver features** (only 26% of rows); **95%** are
+  missing-a-driver *or* within 0.25h of a sleep threshold. The generator deletes/noises the very
+  columns the rule depends on, so those labels are **information-theoretically unrecoverable** — no
+  model can beat the Bayes rate on them.
+- **Driver recoverability:** `physical_activity_level` is strongly recoverable from other features
+  (+0.356 over prior), but `stress_level` (+0.028) and the sleep threshold (~+0.01) barely are — and
+  missingness is **MCAR** (label distribution identical whether a driver is present or not), so a
+  missing-indicator carries no signal.
+- **Bayes-rule model** (`src/rule_bayes.py`): impute each driver's distribution and apply the exact
+  generation rule, marginalizing the uncertainty. It encodes the *true* label-generating process — yet
+  it scores 0.944 alone and adds **nothing** to the blend (0.94990 → 0.94989). That's the key result:
+  the GBMs already extract every recoverable bit; the residual is irreducible noise.
+- **Fine decision-rule search** and correlated-GBM stacking: no gain.
+
+**Conclusion:** honest CV sits at **~0.9499**, best LB **0.94983** — essentially the Bayes ceiling for
+this data. Crossing a clean 0.95000 *honestly* is at/beyond the practical limit; the missing-`stress`
+rows and threshold noise are unrecoverable by construction. Displayed 0.952+ scores are public-LB
+probing (below), not better models.
+
 ### Context on the leaderboard (from the top scorer's own writeup)
 The public 0.952+ scores come from **public-LB probing** — the public split is deterministic, so
 row-level membership can be recovered by group testing. That transfers zero to the private 80%.
