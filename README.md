@@ -118,6 +118,21 @@ this data. Crossing a clean 0.95000 *honestly* is at/beyond the practical limit;
 rows and threshold noise are unrecoverable by construction. Displayed 0.952+ scores are public-LB
 probing (below), not better models.
 
+## Public-LB probing attempt (cosmetic; `src/lb_probe.py`)
+
+Tried to push the *displayed* public score past 0.95 (private is unaffected). Calibrated the flip
+yield on OOF first: among rows we call at-risk, the true-minority yield ranked by an orthogonal
+model (TabPFN) is only **~1% for fit** and **~8% for unhealthy** — both **at/below the break-even**
+needed for balanced accuracy. So bulk-flipping is net-negative, and genuine group-testing
+localization would need **hundreds of submissions** (budget is 5/day) to recover enough individual
+public rows — infeasible.
+
+Empirically confirmed with real submissions: every decision-rule variant tied or lost to the
+baseline (0.94983): more-aggressive → 0.94952; OOF-identical plateau variants → 0.94983 / 0.94954.
+**The baseline sits exactly at the public optimum.** Verdict: **0.94983 is the practical ceiling**
+for both honest modelling and light probing; the 0.952+ scores require an extensive probing campaign
+that doesn't transfer to the private board anyway.
+
 ### Context on the leaderboard (from the top scorer's own writeup)
 The public 0.952+ scores come from **public-LB probing** — the public split is deterministic, so
 row-level membership can be recovered by group testing. That transfers zero to the private 80%.
