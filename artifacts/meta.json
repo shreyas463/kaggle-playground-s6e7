@@ -1,0 +1,7 @@
+{
+  "oof_balanced_accuracy": 0.9472091081011044,
+  "n_ens": 6,
+  "ctx": 8000,
+  "device": "cuda",
+  "minutes": 442.4962052702904
+}

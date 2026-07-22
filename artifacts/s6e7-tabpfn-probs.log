@@ -1,0 +1,77 @@
+[{"stream_name":"stdout","time":9.872215866,"data":"GPU arch unsupported by current torch -\u003e pinning torch 2.5.1+cu121\n"}
+,{"stream_name":"stdout","time":21.495935884,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 780.4/780.4 MB 2.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":24.650939451,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 23.7/23.7 MB 60.5 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":24.994429975,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 823.6/823.6 kB 9.4 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":25.248825638,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 14.1/14.1 MB 87.9 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":34.566819006,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 664.8/664.8 MB 1.7 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":42.496461665,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 410.6/410.6 MB 3.2 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":45.959560511,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 121.6/121.6 MB 7.5 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":47.088327496,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.5/56.5 MB 30.8 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":49.720501272,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 124.2/124.2 MB 6.0 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":52.217002121,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 196.0/196.0 MB 9.0 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":56.06342691,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 188.7/188.7 MB 5.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":56.807775024,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 99.1/99.1 kB 5.2 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":59.438386297,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 209.6/209.6 MB 8.4 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":62.479214615,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.2/6.2 MB 49.1 MB/s eta 0:00:00\n"}
+,{"stream_name":"stderr","time":193.808342802,"data":"ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n"}
+,{"stream_name":"stderr","time":193.808408099,"data":"torchaudio 2.10.0+cu128 requires torch==2.10.0, but you have torch 2.5.1+cu121 which is incompatible.\n"}
+,{"stream_name":"stderr","time":193.808414583,"data":"torchvision 0.25.0+cu128 requires torch==2.10.0, but you have torch 2.5.1+cu121 which is incompatible.\n"}
+,{"stream_name":"stdout","time":197.224507884,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 727.9/727.9 kB 897.6 kB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":207.050142468,"data":"torch 2.5.1+cu121 | cuda 12.1 | avail True\n"}
+,{"stream_name":"stdout","time":207.07415863,"data":"gpu Tesla P100-PCIE-16GB | capability (6, 0) | arch_list ['sm_50', 'sm_60', 'sm_70', 'sm_75', 'sm_80', 'sm_86', 'sm_90']\n"}
+,{"stream_name":"stdout","time":207.246978029,"data":"CUDA self-test: OK\n"}
+,{"stream_name":"stdout","time":207.247045531,"data":"::/kaggle/input contents:: ['competitions']\n"}
+,{"stream_name":"stdout","time":207.249105323,"data":"::train.csv candidates:: ['/kaggle/input/competitions/playground-series-s6e7/train.csv']\n"}
+,{"stream_name":"stdout","time":210.309239111,"data":"device=cuda N_ENS=6 CTX=8000 train=(690088, 15) test=(295753, 15)\n"}
+,{"stream_name":"stdout","time":210.404104181,"data":"fold 0 ...\n"}
+,{"stream_name":"stderr","time":213.038898022,"data":"Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n"}
+,{"stream_name":"stdout","time":835.941536158,"data":"    ens 1/6 done\n"}
+,{"stream_name":"stdout","time":1457.322999876,"data":"    ens 2/6 done\n"}
+,{"stream_name":"stdout","time":2079.036078416,"data":"    ens 3/6 done\n"}
+,{"stream_name":"stdout","time":2700.647323366,"data":"    ens 4/6 done\n"}
+,{"stream_name":"stdout","time":3322.326224705,"data":"    ens 5/6 done\n"}
+,{"stream_name":"stdout","time":3944.141096147,"data":"    ens 6/6 done\n"}
+,{"stream_name":"stdout","time":3944.156458718,"data":"fold 1 ...\n"}
+,{"stream_name":"stdout","time":4566.006303896,"data":"    ens 1/6 done\n"}
+,{"stream_name":"stdout","time":5188.12630331,"data":"    ens 2/6 done\n"}
+,{"stream_name":"stdout","time":5810.107966105,"data":"    ens 3/6 done\n"}
+,{"stream_name":"stdout","time":6432.16018236,"data":"    ens 4/6 done\n"}
+,{"stream_name":"stdout","time":7053.934149146,"data":"    ens 5/6 done\n"}
+,{"stream_name":"stdout","time":7675.775932032,"data":"    ens 6/6 done\n"}
+,{"stream_name":"stdout","time":7675.790023572,"data":"fold 2 ...\n"}
+,{"stream_name":"stdout","time":8297.685829916,"data":"    ens 1/6 done\n"}
+,{"stream_name":"stdout","time":8919.611908012,"data":"    ens 2/6 done\n"}
+,{"stream_name":"stdout","time":9541.646137991,"data":"    ens 3/6 done\n"}
+,{"stream_name":"stdout","time":10163.442335704,"data":"    ens 4/6 done\n"}
+,{"stream_name":"stdout","time":10785.181012782,"data":"    ens 5/6 done\n"}
+,{"stream_name":"stdout","time":11407.077698731,"data":"    ens 6/6 done\n"}
+,{"stream_name":"stdout","time":11407.092256438,"data":"fold 3 ...\n"}
+,{"stream_name":"stdout","time":12029.068149207,"data":"    ens 1/6 done\n"}
+,{"stream_name":"stdout","time":12651.244412598,"data":"    ens 2/6 done\n"}
+,{"stream_name":"stdout","time":13273.266639996,"data":"    ens 3/6 done\n"}
+,{"stream_name":"stdout","time":13895.094663216,"data":"    ens 4/6 done\n"}
+,{"stream_name":"stdout","time":14516.870926594,"data":"    ens 5/6 done\n"}
+,{"stream_name":"stdout","time":15138.23059634,"data":"    ens 6/6 done\n"}
+,{"stream_name":"stdout","time":15138.242961213,"data":"fold 4 ...\n"}
+,{"stream_name":"stdout","time":15759.686956652,"data":"    ens 1/6 done\n"}
+,{"stream_name":"stdout","time":16381.036115344,"data":"    ens 2/6 done\n"}
+,{"stream_name":"stdout","time":17002.53695683,"data":"    ens 3/6 done\n"}
+,{"stream_name":"stdout","time":17624.166060903,"data":"    ens 4/6 done\n"}
+,{"stream_name":"stdout","time":18246.060116115,"data":"    ens 5/6 done\n"}
+,{"stream_name":"stdout","time":18868.145458785,"data":"    ens 6/6 done\n"}
+,{"stream_name":"stdout","time":18868.177718774,"data":"OOF balanced accuracy = 0.94721\n"}
+,{"stream_name":"stdout","time":18868.177793543,"data":"test predictions ...\n"}
+,{"stream_name":"stdout","time":20182.686063737,"data":"    ens 1/6 done\n"}
+,{"stream_name":"stdout","time":21497.338896758,"data":"    ens 2/6 done\n"}
+,{"stream_name":"stdout","time":22811.951178951,"data":"    ens 3/6 done\n"}
+,{"stream_name":"stdout","time":24127.058358555,"data":"    ens 4/6 done\n"}
+,{"stream_name":"stdout","time":25441.746285548,"data":"    ens 5/6 done\n"}
+,{"stream_name":"stdout","time":26756.628956152,"data":"    ens 6/6 done\n"}
+,{"stream_name":"stdout","time":26757.021955334,"data":"done in 442.5 min\n"}
+,{"stream_name":"stderr","time":26760.756626873,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":26760.756670091,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":26761.039302925,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":26761.039341093,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":26761.943857191,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":26763.49107983,"data":"[NbConvertApp] Writing 317172 bytes to __results__.html\n"}
+]

@@ -73,13 +73,34 @@ original **hurts** (it pulls the model toward the deterministic rule, which is w
 near thresholds — the original's value was revealing the rule, not its rows); stacking correlated
 GBMs adds ~nothing.
 
+## TabPFN — the orthogonal family ([kernel](https://www.kaggle.com/code/shreyascppsc/s6e7-tabpfn-probs))
+
+TabPFN is a tabular **foundation model** whose errors are orthogonal to the GBDT ecosystem — the one
+family shown to carry incremental signal past the GBDT frontier. Ran it on a Kaggle P100 GPU
+(subsample ensemble: 6 TabPFN-v2 models on class-balanced 8k subsamples, 5-fold OOF + test).
+
+| Model / blend | OOF | LB |
+|---|---|---|
+| TabPFN v2 alone | 0.9472 | — |
+| stack: GBMs + rule features | 0.94986 | — |
+| **stack: GBMs + rule + TabPFN** | **0.94990** | **0.94983 ← best** |
+
+TabPFN alone is individually *weaker* (0.9472), but adding it to the logistic stack nudged OOF
+(+0.00004) and, more tellingly, lifted the **public LB to 0.94983** (best of all submissions). Small,
+but the direction confirms the orthogonality thesis: correlated GBMs are exhausted; a genuinely
+different inductive bias is the only thing that still moves an honest blend.
+
+Getting TabPFN running on the kernel meant clearing three real blockers, documented in
+[`kernel/`](kernel/): competition data mounts under `/kaggle/input/competitions/…`; the pip default
+is the *gated* v3 model (force ungated v2 via `model_path`); and Kaggle's torch 2.10+cu128 dropped
+Pascal (sm_60) kernels while assigning a P100 — pin torch 2.5.1+cu121 before import.
+
 ### Context on the leaderboard (from the top scorer's own writeup)
 The public 0.952+ scores come from **public-LB probing** — the public split is deterministic, so
 row-level membership can be recovered by group testing. That transfers zero to the private 80%.
-The honest CV ceiling is **~0.9508**; an honest ~0.950+ model may rank well on private when the
-probed scores collapse. Remaining honest headroom (~+0.001) likely requires an orthogonal model
-family (e.g. a tabular foundation model like TabPFN) blended with the GBMs — correlated GBM
-ensembles are exhausted.
+The honest CV ceiling is **~0.9508**; our honest ~0.950 blend may rank well on private when the
+probed scores collapse. The submitted stack is CV-selected (no LB feedback), i.e. the "defense"
+ledger in that framework.
 
 ## Layout
 ```
